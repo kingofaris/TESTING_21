@@ -1,0 +1,16 @@
+fastapi==0.115.0
+uvicorn==0.30.0
+python-multipart==0.0.9
+diffusers>=0.30.0
+transformers>=4.44.0
+accelerate>=0.33.0
+torch>=2.4.0
+sentencepiece
+protobuf
+huggingface_hub
+bitsandbytes>=0.43.0
+aiofiles
+python-dotenv
+opencv-python
+imageio
+imageio-ffmpeg

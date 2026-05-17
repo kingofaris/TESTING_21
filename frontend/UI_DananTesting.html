@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTX Video | Local Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f111a;
+            --bg-panel: #1a1d27;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 450px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1e2235 0%, var(--bg-dark) 100%);
+        }
+
+        h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+        label { font-size: 13px; font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 6px; }
+        
+        textarea, input[type="number"], input[type="range"] {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        textarea { resize: vertical; min-height: 80px; }
+        textarea.code-font { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+        .param-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .slider-container { display: flex; align-items: center; gap: 12px; }
+        .slider-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--bg-dark); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); min-width: 50px; text-align: center; }
+
+        button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover { background-color: var(--accent-hover); }
+        button:disabled { background-color: var(--border); cursor: not-allowed; }
+
+        .video-container {
+            width: 100%;
+            max-width: 768px;
+            aspect-ratio: 16/9;
+            background-color: #000;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .status-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 768px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .loader {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <h1>⚙️ Parameter Kontrol</h1>
+            <label style="margin-top: -4px;">Tuning model LTX-Video secara lokal</label>
+        </div>
+
+        <div>
+            <label>Positive Prompt (Gunakan struktur: Subjek + Aksi + Kamera + Kualitas)</label>
+            <textarea id="prompt" class="code-font">Cinematic high-fidelity 3D render of an industrial robotic arm assembling an IoT circuit board. Subject: metallic robotic arm articulating its joints precisely. Camera: slow panning from left to right. Lighting: dramatic studio lighting, realistic shadows. Quality: 4k, ultra-detailed, photorealistic.</textarea>
+        </div>
+
+        <div>
+            <label>Negative Prompt (Krusial untuk mencegah distorsi bentuk)</label>
+            <textarea id="negative_prompt" class="code-font">morphing, distorted, bad anatomy, flickering, blurry, low resolution, unnatural movement, noisy, text, watermark</textarea>
+        </div>
+
+        <div class="param-grid">
+            <div>
+                <label>Inference Steps</label>
+                <div class="slider-container">
+                    <input type="range" id="steps" min="20" max="50" value="35" oninput="updateVal('steps_val', this.value)">
+                    <span id="steps_val" class="slider-val">35</span>
+                </div>
+            </div>
+            <div>
+                <label>CFG Scale</label>
+                <div class="slider-container">
+                    <input type="range" id="cfg" min="1.0" max="8.0" step="0.5" value="4.0" oninput="updateVal('cfg_val', this.value)">
+                    <span id="cfg_val" class="slider-val">4.0</span>
+                </div>
+            </div>
+            <div>
+                <label>Jumlah Frame (1 FPS = ~8 frame)</label>
+                <input type="number" id="frames" value="25" min="8" max="60">
+            </div>
+            <div>
+                <label>Seed (-1 untuk Random)</label>
+                <input type="number" id="seed" value="-1">
+            </div>
+        </div>
+
+        <button id="generateBtn" onclick="generateVideo()">🚀 Generate Video</button>
+    </div>
+
+    <div class="main-content">
+        <div class="video-container" id="videoWrapper">
+            <div id="loader" class="loader"></div>
+            <video id="resultVideo" controls autoplay loop style="display: none;"></video>
+        </div>
+
+        <div class="status-box" id="statusLog">
+            [System] Menunggu input... Pastikan server FastAPI berjalan di port 8000.
+        </div>
+    </div>
+
+    <script>
+        function updateVal(id, val) { document.getElementById(id).innerText = val; }
+
+        function logStatus(msg) {
+            const time = new Date().toLocaleTimeString();
+            document.getElementById('statusLog').innerHTML = `[${time}] ${msg}`;
+        }
+
+        async function generateVideo() {
+            const btn = document.getElementById('generateBtn');
+            const loader = document.getElementById('loader');
+            const video = document.getElementById('resultVideo');
+            
+            btn.disabled = true;
+            btn.innerText = "⏳ Memproses...";
+            video.style.display = "none";
+            loader.style.display = "block";
+            logStatus("Mengirim job ke antrian server...");
+
+            const payload = {
+                prompt: document.getElementById('prompt').value,
+                negative_prompt: document.getElementById('negative_prompt').value,
+                num_inference_steps: parseInt(document.getElementById('steps').value),
+                guidance_scale: parseFloat(document.getElementById('cfg').value),
+                num_frames: parseInt(document.getElementById('frames').value),
+                seed: parseInt(document.getElementById('seed').value),
+                width: 512, // Dikunci di resolusi aman untuk VRAM 6GB sementara
+                height: 320 
+            };
+
+            try {
+                // 1. Kirim Request
+                const res = await fetch('http://localhost:8000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || "Gagal mengirim request");
+
+                const jobId = data.job_id;
+                logStatus(`Job diterima (ID: ${jobId}). Sedang melakukan rendering... ini bisa memakan waktu beberapa menit.`);
+
+                // 2. Polling Status (Cek setiap 3 detik)
+                const checkStatus = setInterval(async () => {
+                    const statusRes = await fetch(`http://localhost:8000/status/${jobId}`);
+                    
+                    if (!statusRes.ok) {
+                        if (statusRes.status === 404) {
+                            clearInterval(checkStatus);
+                            loader.style.display = "none";
+                            btn.disabled = false;
+                            btn.innerText = "🚀 Generate Video";
+                            logStatus("❌ Error: Job tidak ditemukan. Server mungkin direstart (404).");
+                            return;
+                        }
+                    }
+
+                    const statusData = await statusRes.json();
+
+                    if (statusData.status === "done") {
+                        clearInterval(checkStatus);
+                        video.src = "http://localhost:8000" + statusData.video_url;
+                        video.style.display = "block";
+                        loader.style.display = "none";
+                        btn.disabled = false;
+                        btn.innerText = "🚀 Generate Video";
+                        logStatus(`✅ Render selesai dalam ${statusData.duration_seconds} detik. Seed: ${statusData.seed}`);
+                    } else if (statusData.status === "failed") {
+                        clearInterval(checkStatus);
+                        throw new Error(statusData.error);
+                    }
+                }, 3000);
+
+            } catch (err) {
+                loader.style.display = "none";
+                btn.disabled = false;
+                btn.innerText = "🚀 Generate Video";
+                logStatus(`❌ Error: ${err.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

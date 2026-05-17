@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Flow - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            overflow: hidden;
+            /* Canvas style */
+            background: #0A0C15;
+        }
+
+        .navbar {
+            margin-bottom: 0 !important;
+        }
+
+        .studio-canvas {
+            width: 100vw;
+            height: calc(100vh - 100px);
+            position: relative;
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            display: flex;
+            align-items: flex-start; /* Start from top to allow vertical scroll */
+            justify-content: flex-start;
+            padding: 80px 100px; /* More top padding for nodes */
+            overflow: auto; /* Enable both X and Y */
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Premium Scrollbar */
+        .studio-canvas::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .studio-canvas::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        .studio-canvas::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4A4AFF, #FF4AFF);
+            border-radius: 10px;
+        }
+
+        .studio-canvas::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+
+        .studio-canvas::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #4A4AFF, #FF4AFF);
+            border-radius: 10px;
+        }
+
+        .node-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            position: relative;
+            z-index: 2;
+            min-width: max-content;
+            padding-right: 100px;
+        }
+
+        /* SVG Connections */
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: rgba(160, 160, 255, 0.2);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+
+        /* Node Cards */
+        .node-card {
+            background: rgba(30, 35, 55, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: 280px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .node-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(160, 160, 255, 0.4);
+            box-shadow: 0 30px 60px rgba(74, 74, 255, 0.2);
+        }
+
+        .node-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .node-content {
+            padding: 15px;
+        }
+
+        .node-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .node-video {
+            width: 100%;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        .node-prompt {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .audio-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            padding: 8px 15px;
+            margin-top: 15px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .audio-pill i {
+            color: #A0A0FF;
+        }
+
+        /* Result Node */
+        .node-result {
+            width: 450px;
+        }
+
+        .node-result video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Connectors */
+        .connector {
+            width: 12px;
+            height: 12px;
+            background: #4A4AFF;
+            border: 2px solid #0A0C15;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.2s;
+        }
+
+        .connector-right {
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .connector-left {
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .node-card:hover .connector {
+            transform: translateY(-50%) scale(1.5);
+            box-shadow: 0 0 15px #4A4AFF;
+        }
+
+        /* Grouping Left Inputs */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Controls Toolbar */
+        .flow-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: rgba(15, 20, 35, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+        }
+
+        .btn-studio {
+            background: linear-gradient(135deg, #4A4AFF, #FF4AFF);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 10px 20px rgba(74, 74, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-studio:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(74, 74, 255, 0.5);
+        }
+
+        .btn-save-workflow {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save-workflow:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Node Meta Tags */
+        .node-meta {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .meta-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+        }
+
+        .node-status-bar {
+            height: 4px;
+            background: rgba(160,160,255,0.1);
+            border-radius: 2px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node-status-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 75%;
+            background: linear-gradient(90deg, #4A4AFF, #FF4AFF);
+            box-shadow: 0 0 10px rgba(74, 74, 255, 0.5);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">StudioFlow</a>
+                <a href="image2video.html">Image to Video</a>
+                <a href="text2video.html">Text to Video</a>
+                <a href="video2video.html">Video to Video</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <div class="studio-canvas">
+        <!-- SVG Connections Layer -->
+        <svg class="connections-svg">
+            <!-- Left to Text -->
+            <path d="M 320 300 C 400 300, 400 450, 480 450" class="connection-line" />
+            <path d="M 320 600 C 400 600, 400 450, 480 450" class="connection-line" />
+            <!-- Text to Video Input -->
+            <path d="M 760 450 C 800 450, 800 400, 840 400" class="connection-line" />
+            <!-- Video Input to Result -->
+            <path d="M 1120 400 C 1180 400, 1180 450, 1240 450" class="connection-line" />
+        </svg>
+
+
+
+        <div class="node-container">
+            <!-- Left Group: Images -->
+            <div class="input-group">
+                <div class="node-card" style="width: 240px;">
+                    <div class="node-header">
+                        <span class="node-step">STEP 1</span>
+                        <span>IMAGE INPUT</span>
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="node-content">
+                        <video autoplay loop muted controls class="node-image">
+                            <source src="workflow_step1.mp4" type="video/mp4">
+                        </video>
+                        <div class="node-meta">
+                            <span class="meta-tag">1024x1024</span>
+                            <span class="meta-tag">IMAGE SOURCE</span>
+                        </div>
+                    </div>
+                    <div class="connector connector-right"></div>
+                </div>
+
+                <div class="node-card" style="width: 240px;">
+                    <div class="node-header">
+                        <span class="node-step">STEP 2</span>
+                        <span>STYLE REFERENCE</span>
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="node-content">
+                        <video autoplay loop muted controls class="node-image">
+                            <source src="workflow_step5.mp4" type="video/mp4">
+                        </video>
+                        <div class="node-meta">
+                            <span class="meta-tag">ADAPTIVE</span>
+                            <span class="meta-tag">STYLE REF</span>
+                        </div>
+                    </div>
+                    <div class="connector connector-right"></div>
+                </div>
+            </div>
+
+            <!-- Mid Group: Text & Video -->
+            <div class="input-group">
+                <div class="node-card" style="width: 320px;">
+                    <div class="node-header">
+                        <span class="node-step">STEP 3</span>
+                        <span>TEXT PROMPT</span>
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <div class="node-content">
+                        <div class="node-prompt">
+                            A 10-second cinematic video of a sleek domestic cat sprinting at full speed across a wide
+                            grassy field, starting with a close-up of its focused eyes and twitching whiskers, then
+                            transitioning into a slow-motion sequence showing powerful muscle movement and fur flowing
+                            with the wind, followed by a real-time chase shot from a low-angle perspective tracking
+                            alongside the cat, paws hitting the ground with precision, dirt and grass particles
+                            scattering, natural golden-hour sunlight casting warm tones and soft shadows, shallow depth
+                            of field with motion blur in the background, ultra-realistic textures,
+                        </div>
+                    </div>
+                    <div class="connector connector-left"></div>
+                    <div class="connector connector-right"></div>
+                </div>
+
+                <div class="node-card" style="width: 320px;">
+                    <div class="node-header">
+                        <span class="node-step">STEP 4</span>
+                        <span>VIDEO SOURCE</span>
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="node-content">
+                    <video autoplay loop muted class="node-video">
+                        <source src="workflow_step2.mp4" type="video/mp4">
+                    </video>
+                    <div class="node-meta">
+                        <span class="meta-tag">720P</span>
+                        <span class="meta-tag">24 FPS</span>
+                    </div>
+                    <div class="audio-pill">
+                            <i class="fas fa-music"></i>
+                            <span>snowfall-bells.mp3</span>
+                        </div>
+                    </div>
+                    <div class="connector connector-left"></div>
+                    <div class="connector connector-right"></div>
+                </div>
+            </div>
+
+            <div class="node-card node-result">
+                <div class="node-header">
+                    <span class="node-step" style="background: rgba(160,160,255,0.2); color: #fff;">FINAL</span>
+                    <span>STUDIO RESULT</span>
+                    <i class="fas fa-magic"></i>
+                </div>
+                <div class="node-content">
+                    <video autoplay loop muted controls>
+                        <source src="workflow_step3.mp4" type="video/mp4">
+                    </video>
+                    <div class="node-status-bar">
+                        <div class="node-status-fill"></div>
+                    </div>
+                    <div class="node-meta">
+                        <span class="meta-tag">GENERATING...</span>
+                        <span class="meta-tag">75%</span>
+                    </div>
+                </div>
+                <div class="connector connector-left"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flow-controls">
+        <button class="btn-studio" onclick="alert('Studio Processing Started!')">
+            <i class="fas fa-play"></i> RUN FLOW
+        </button>
+        <button class="btn-save-workflow">
+            <i class="fas fa-save"></i> SAVE WORKFLOW
+        </button>
+    </div>
+
+    <!-- Background Glow -->
+    <div class="bg-glow bg-glow-1"
+        style="width: 800px; height: 800px; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05;">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoRA Training - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .lora-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        .upload-area {
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #4A4AFF;
+            background: rgba(74,74,255,0.05);
+        }
+        .upload-area i {
+            font-size: 48px;
+            color: #9B9BFF;
+            margin-bottom: 16px;
+        }
+        .training-panel {
+            background: rgba(0,0,0,0.2);
+            border-radius: 24px;
+            padding: 30px;
+        }
+        .progress-bar-xx {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill-xx {
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, #4A4AFF, #FF4AFF);
+            border-radius: 4px;
+            animation: pulse-xx 2s infinite;
+        }
+        @keyframes pulse-xx {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .preview-thumb {
+            aspect-ratio: 1;
+            background: #151A28;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="text2video.html">Text2Video</a>
+                <a href="audio2video.html">Audio2Video</a>
+                <a href="camera.html">Camera</a>
+                <a href="pose.html">Pose</a>
+                <a href="depth.html">Depth</a>
+                <a href="lora.html">LoRA</a>
+                <a href="edit.html">Edit</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>LoRA Training</h1>
+                    <p>Personalize your AI with custom character and style training. Fine-tune production-ready models using your own dataset for unmatched creative consistency.</p>
+                    <button class="btn-explore">Start Training</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.studio/LTX2-homepage-vegas-campaign/MP4/fold-01-metro.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">TRAINING LOG</span>
+                        <div class="prompt-content" style="font-family: monospace; font-size: 10px;">
+                            <div style="color: #00FFCC;">[INFO] Initializing weights...</div>
+                            <div style="color: #FFFFFF;">[STEP 150/1000] Loss: 0.042</div>
+                            <div style="color: #FFFFFF;">[STEP 300/1000] Loss: 0.021</div>
+                            <div style="color: #FF6BFF;">[READY] Style: "Vibrant Anime"</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <label class="form-label">
+                    <i class="fas fa-microchip"></i> CUSTOM MODEL TRAINING
+                </label>
+                
+                <div class="lora-grid">
+                    <div>
+                        <div class="upload-area" id="uploadArea" onclick="simulateUpload()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Upload Training Images</h3>
+                            <p>10-30 images of your character or style</p>
+                            <p style="color: #9B9BFF; margin-top: 16px;">JPG, PNG, WEBP</p>
+                        </div>
+                        
+                        <div class="image-preview">
+                            <div class="preview-thumb"><i class="fas fa-image" style="opacity:0.3;"></i></div>
+                            <div class="preview-thumb"><i class="fas fa-image" style="opacity:0.3;"></i></div>
+                            <div class="preview-thumb"><i class="fas fa-image" style="opacity:0.3;"></i></div>
+                            <div class="preview-thumb"><i class="fas fa-image" style="opacity:0.3;"></i></div>
+                            <div class="preview-thumb"><i class="fas fa-image" style="opacity:0.3;"></i></div>
+                            <div class="preview-thumb"><i class="fas fa-plus" style="opacity:0.3;"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="training-panel">
+                        <h3 style="margin-bottom: 20px;">Training Progress</h3>
+                        <p>Model: character_style_v1</p>
+                        <div class="progress-bar-xx">
+                            <div class="progress-fill-xx"></div>
+                        </div>
+                        <p style="color: rgba(255,255,255,0.5);">60% complete • 15 min remaining</p>
+                        
+                        <div style="display: flex; gap: 16px; margin-top: 30px;">
+                            <button class="btn-refresh" style="background: var(--purple-600); color: white;"><i class="fas fa-play"></i> Start</button>
+                            <button class="btn-refresh"><i class="fas fa-pause"></i> Pause</button>
+                            <button class="btn-refresh"><i class="fas fa-stop"></i> Stop</button>
+                        </div>
+
+                        <div style="margin-top: 30px;">
+                            <h4>Training Settings</h4>
+                            <p style="color: rgba(255,255,255,0.5); margin-top: 10px;">Batch Size: 4 | Learning Rate: 1e-4 | Epochs: 100</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-generate" style="width: 100%;" onclick="startTraining()">
+                    <i class="fas fa-microchip" style="margin-right: 8px;"></i> Train Custom LoRA
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - LoRA Training Feature</p>
+        </footer>
+    </div>
+
+    <script>
+        function simulateUpload() {
+            document.getElementById('uploadArea').innerHTML = `
+                <i class="fas fa-check-circle" style="font-size: 48px; color: #4AFF4A;"></i>
+                <h3>15 images uploaded!</h3>
+                <p>character_reference.zip • 45 MB</p>
+            `;
+        }
+
+        function startTraining() {
+            alert('LoRA training started! This will take approximately 15 minutes. (Demo)');
+        }
+    </script>
+</body>
+</html>

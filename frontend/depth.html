@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depth Aware - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="text2video.html">Text2Video</a>
+                <a href="audio2video.html">Audio2Video</a>
+                <a href="camera.html">Camera</a>
+                <a href="pose.html">Pose</a>
+                <a href="depth.html">Depth</a>
+                <a href="lora.html">LoRA</a>
+                <a href="edit.html">Edit</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Depth Aware</h1>
+                    <p>Unlock 3D spatial understanding for realistic scene composition. Generate and manipulate depth
+                        maps to separate foreground/background with cinematic precision.</p>
+                    <button class="btn-explore">Explore 3D Space</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="depth aware.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">SPATIAL ENGINE</span>
+                        <div class="prompt-content" style="text-align: center;">
+                            <i class="fas fa-layer-group"
+                                style="font-size: 24px; color: #FFCC00; margin-bottom: 10px;"></i>
+                            <p style="font-size: 11px; color: rgba(255,255,255,0.7);">Mapping point cloud... Calculating
+                                occlusion... Generating 16-bit depth buffer...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <p style="color: var(--text-secondary); margin-bottom: 30px;">3D spatial understanding and depth map
+                    generation for realistic scenes.</p>
+
+                <div
+                    style="background: rgba(0,0,0,0.5); border-radius: 20px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);">
+                    <i class="fas fa-layer-group" style="font-size: 60px; color: var(--purple-700);"></i>
+                </div>
+
+                <button class="btn-generate" style="margin-top: 20px;">
+                    <i class="fas fa-cube" style="margin-right: 8px;"></i> Generate Depth Map
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Depth Aware Feature</p>
+        </footer>
+    </div>
+</body>
+
+</html>

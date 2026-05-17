@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retake & Extend - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .edit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .video-preview-box {
+            background: #151A28;
+            border-radius: 20px;
+            padding: 20px;
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-preview-box video {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        .timeline {
+            display: flex;
+            gap: 4px;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        .timeline-frame {
+            flex: 1;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .timeline-frame.active {
+            background: #4A4AFF;
+        }
+
+        .edit-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 30px;
+        }
+
+        .extend-control {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="text2video.html">Text2Video</a>
+                <a href="audio2video.html">Audio2Video</a>
+                <a href="camera.html">Camera</a>
+                <a href="pose.html">Pose</a>
+                <a href="depth.html">Depth</a>
+                <a href="lora.html">LoRA</a>
+                <a href="edit.html">Edit</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Retake & Extend</h1>
+                    <p>Perfect your creations with AI-powered video editing. Extend durations, modify specific elements,
+                        and retake segments to achieve cinematic perfection.</p>
+                    <button class="btn-explore">Enter Editor</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source
+                                src="https://videos.ltx.io/LTX-2/LTX-2-3-release/model-page/ltx2-3-hero-fin-opt1.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">EDITING ENGINE</span>
+                        <div class="prompt-content">
+                            <i class="fas fa-scissors" style="color: #FF4AFF; margin-right: 8px;"></i> Duration: +5s
+                            <p style="margin-top: 5px; font-size: 11px; color: rgba(255,255,255,0.5);">Merging temporal
+                                vectors... Maintaining consistency... Scaling resolution...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <label class="form-label">
+                    <i class="fas fa-scissors"></i> VIDEO EDITING
+                </label>
+
+                <div class="edit-grid">
+                    <div>
+                        <div class="video-preview-box">
+                            <video style="width:100%;" autoplay loop muted>
+                                <source
+                                    src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                                    type="video/mp4">
+                            </video>
+                        </div>
+
+                        <div class="timeline">
+                            <div class="timeline-frame active"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                            <div class="timeline-frame"></div>
+                        </div>
+                    </div>
+
+                    <div class="edit-panel">
+                        <h3>Retake Element</h3>
+                        <p style="color: rgba(255,255,255,0.5); margin-bottom: 10px;">Select a frame and describe what
+                            to change</p>
+                        <textarea rows="3" class="form-textarea" style="margin-bottom: 15px;"
+                            placeholder="Example: change the character's shirt to red, add a hat, make the background darker..."></textarea>
+                        <button class="btn-generate" onclick="retakeVideo()"
+                            style="box-shadow: none; margin-bottom: 30px;">Apply Retake</button>
+
+                        <div style="border-top: 1px solid rgba(255,255,255,0.1); pt: 30px;">
+                            <h3 style="margin-top: 20px;">Extend Scene</h3>
+                            <div class="extend-control">
+                                <input type="number" class="form-input" min="1" max="20" value="4"
+                                    style="width: 100px;">
+                                <span>seconds</span>
+                            </div>
+                            <button class="btn-generate"
+                                style="background: linear-gradient(135deg, #9B4DFF, #FF4AFF); box-shadow: none;"
+                                onclick="extendVideo()">Extend Video</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 16px; margin-top: 20px;">
+                    <button class="btn-refresh"><i class="fas fa-undo"></i> Undo</button>
+                    <button class="btn-refresh"><i class="fas fa-redo"></i> Redo</button>
+                    <button class="btn-generate" style="width: auto; margin: 0; padding: 10px 30px;"
+                        onclick="exportVideo()"><i class="fas fa-download"></i> Export</button>
+                </div>
+            </section>
+            <!-- Retake Showcase Grid -->
+            <section class="card" style="margin-top: 40px; border-color: rgba(160, 160, 255, 0.1);">
+                <label class="form-label">
+                    <i class="fas fa-th-large"></i> RECENT RETAKES
+                </label>
+                <div class="retake-grid">
+                    <div class="retake-item">
+                        <video autoplay loop muted playsinline>
+                            <source
+                                src="https://videos.ltx.io/LTX-2/LTX-2-model-page/capabilities/style-consistency/ModelP-06-StyleCon-01_opt.mp4"
+                                type="video/webm">
+                        </video>
+                        <button class="retake-pause"><i class="fas fa-pause"></i></button>
+                    </div>
+                    <div class="retake-item">
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.io/LTX-2/LTX-2-model-page/capabilities/style-consistency/ModelP-06-StyleCon-02_opt.mp4"
+                                type="video/mp4">
+                        </video>
+                        <button class="retake-pause"><i class="fas fa-pause"></i></button>
+                    </div>
+                    <div class="retake-item">
+                        <video autoplay loop muted playsinline>
+                            <source
+                                src="https://videos.ltx.io/LTX-2/LTX-2-model-page/capabilities/style-consistency/ModelP-06-StyleCon-03_opt.mp4"
+                                type="video/mp4">
+                        </video>
+                        <button class="retake-pause"><i class="fas fa-pause"></i></button>
+                    </div>
+                    <div class="retake-item">
+                        <video autoplay loop muted playsinline>
+                            <source
+                                src="https://videos.ltx.io/LTX-2/LTX-2-model-page/capabilities/style-consistency/ModelP-06-StyleCon-04_opt.mp4"
+                                type="video/mp4">
+                        </video>
+                        <button class="retake-pause"><i class="fas fa-pause"></i></button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Retake & Extend Feature</p>
+        </footer>
+    </div>
+
+    <script>
+        function retakeVideo() {
+            alert('Retake applied! Regenerating selected elements... (Demo)');
+        }
+
+        function extendVideo() {
+            alert('Extending video by 4 seconds... (Demo)');
+        }
+
+        function exportVideo() {
+            alert('Exporting edited video... (Demo)');
+        }
+    </script>
+</body>
+
+</html>

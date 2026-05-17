@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Control - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="text2video.html">Text2Video</a>
+                <a href="audio2video.html">Audio2Video</a>
+                <a href="camera.html">Camera</a>
+                <a href="pose.html">Pose</a>
+                <a href="depth.html">Depth</a>
+                <a href="lora.html">LoRA</a>
+                <a href="edit.html">Edit</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Camera Control</h1>
+                    <p>Master cinematic storytelling with precise motion control. Pan, tilt, orbit, and zoom through our intuitive AI-guided camera system.</p>
+                    <button class="btn-explore">Configure Motion</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.io/LTX-2/LTX-2-3-release/model-page/ltx2-3-hero-fin-opt1.mp4" type="video/webm">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">MOTION PATH</span>
+                        <div class="prompt-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div style="font-size: 11px; color: #A0A0FF;"><i class="fas fa-arrows-up-down"></i> Tilt: +15°</div>
+                            <div style="font-size: 11px; color: #A0A0FF;"><i class="fas fa-arrows-left-right"></i> Pan: -30°</div>
+                            <div style="font-size: 11px; color: #A0A0FF;"><i class="fas fa-video"></i> Orbit: Clockwise</div>
+                            <div style="font-size: 11px; color: #A0A0FF;"><i class="fas fa-magnifying-glass-plus"></i> Zoom: 1.5x</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <p style="color: var(--text-secondary); margin-bottom: 30px;">Manage precise camera movements with AI-guided precision.</p>
+                
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label class="form-label">Movement Type</label>
+                        <select class="form-select">
+                            <option>Pan Left</option>
+                            <option>Pan Right</option>
+                            <option>Zoom In</option>
+                            <option>Zoom Out</option>
+                            <option>Dolly Zoom</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-generate">
+                    <i class="fas fa-video" style="margin-right: 8px;"></i> Apply Camera
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Camera Control Feature</p>
+        </footer>
+    </div>
+</body>
+</html>

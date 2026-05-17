@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAX Studio | Next-Gen AI Video Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #03050A;
+            color: #FFFFFF;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Gradient Background dengan Partikel */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(75, 0, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 200, 255, 0.1) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+            animation: gridPulse 4s ease infinite;
+        }
+
+        @keyframes gridPulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            margin-bottom: 60px;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(10, 12, 21, 0.6);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFFFFF, #A0A0FF, #FF6BFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            position: relative;
+            animation: glowPulse 3s ease infinite;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px rgba(160, 160, 255, 0.3));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px rgba(160, 160, 255, 0.6));
+            }
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #4A4AFF, #FF4AFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s;
+            padding: 8px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #4A4AFF, #FF4AFF);
+            transition: left 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 0;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-api {
+            background: linear-gradient(135deg, #4A4AFF, #9B4DFF);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            animation: buttonPulse 2s ease infinite;
+        }
+
+        @keyframes buttonPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(74, 74, 255, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(74, 74, 255, 0.6);
+            }
+        }
+
+        .btn-api:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(90, 90, 255, 0.5);
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .workflow-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .workflow-header h2 {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFF, #A0A0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+
+        .workflow-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(160, 160, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .workflow-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4A4AFF, #FF4AFF);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .workflow-card:hover::before {
+            opacity: 1;
+        }
+
+        .wf-video-wrapper {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .wf-video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .workflow-card:hover .wf-video-wrapper video {
+            opacity: 1;
+        }
+
+        .step-num {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 64px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            line-height: 1;
+            z-index: 0;
+        }
+
+        .wf-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .wf-content h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .wf-content h3 i {
+            color: #A0A0FF;
+            font-size: 18px;
+        }
+
+        .wf-content p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Video Container dengan Animasi */
+        .video-showcase {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 50px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: floatVideo 6s ease infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .video-showcase:hover {
+            transform: scale(1.02);
+        }
+
+        @keyframes floatVideo {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-10px) rotate(0.5deg);
+            }
+
+            75% {
+                transform: translateY(10px) rotate(-0.5deg);
+            }
+        }
+
+        .video-showcase::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 3px;
+            background: linear-gradient(135deg, #4A4AFF, #FF4AFF, #00FFFF);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% {
+                background: linear-gradient(0deg, #4A4AFF, #FF4AFF, #00FFFF);
+            }
+
+            25% {
+                background: linear-gradient(90deg, #4A4AFF, #FF4AFF, #00FFFF);
+            }
+
+            50% {
+                background: linear-gradient(180deg, #4A4AFF, #FF4AFF, #00FFFF);
+            }
+
+            75% {
+                background: linear-gradient(270deg, #4A4AFF, #FF4AFF, #00FFFF);
+            }
+
+            100% {
+                background: linear-gradient(360deg, #4A4AFF, #FF4AFF, #00FFFF);
+            }
+        }
+
+        .video-showcase video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 38px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(74, 74, 255, 0.1), rgba(255, 74, 255, 0.1));
+            pointer-events: none;
+            border-radius: 38px;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            pointer-events: none;
+            opacity: 0;
+            animation: pulsePlay 2s ease infinite;
+        }
+
+        .video-showcase:hover .play-button {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        @keyframes pulsePlay {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        /* Character Animation */
+        .floating-characters {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .character {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: characterFloat 15s ease infinite;
+        }
+
+        .character:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+            background: linear-gradient(135deg, #4A4AFF, #9B4DFF);
+        }
+
+        .character:nth-child(2) {
+            bottom: 20%;
+            right: 15%;
+            animation-delay: -5s;
+            background: linear-gradient(135deg, #FF4AFF, #FF6B6B);
+        }
+
+        .character:nth-child(3) {
+            top: 60%;
+            left: 15%;
+            animation-delay: -2s;
+            background: linear-gradient(135deg, #00FFFF, #4A4AFF);
+        }
+
+        @keyframes characterFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(20px, -20px) rotate(10deg);
+            }
+
+            50% {
+                transform: translate(-10px, 20px) rotate(-5deg);
+            }
+
+            75% {
+                transform: translate(15px, 10px) rotate(8deg);
+            }
+        }
+
+        .hero h1 {
+            font-size: 82px;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -3px;
+            background: linear-gradient(to bottom, #FFFFFF, #B0B8FF, #A05AFF, #FF4AFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            text-shadow: 0 0 30px rgba(160, 90, 255, 0.3);
+            animation: textFloat 6s ease infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes textFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            animation: fadeIn 2s ease 0.3s both;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            perspective: 1000px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            text-align: center;
+            animation: statAppear 0.8s ease backwards;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.1);
+        }
+
+        .stat-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .stat-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stat-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stat-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .stat-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes statAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-20deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .stat-number {
+            font-size: 58px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #AAAAFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .stat-number::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4A4AFF, transparent);
+            animation: lineExpand 2s ease infinite;
+        }
+
+        @keyframes lineExpand {
+
+            0%,
+            100% {
+                transform: scaleX(0.5);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Features Title */
+        .features-title {
+            font-size: 56px;
+            text-align: center;
+            margin: 120px 0 60px;
+            background: linear-gradient(135deg, #fff, #a0a0ff, #ffa0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: titleGlow 4s ease infinite;
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px rgba(160, 160, 255, 0.3));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px rgba(160, 160, 255, 0.6));
+            }
+        }
+
+        .features-title::before,
+        .features-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #4A4AFF, #FF4AFF, transparent);
+        }
+
+        .features-title::before {
+            top: -20px;
+            animation: slideLeft 3s ease infinite;
+        }
+
+        .features-title::after {
+            bottom: -20px;
+            animation: slideRight 3s ease infinite;
+        }
+
+        @keyframes slideLeft {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scaleX(0.5);
+            }
+
+            50% {
+                transform: translateX(-50%) scaleX(1.5);
+            }
+        }
+
+        @keyframes slideRight {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scaleX(0.5);
+            }
+
+            50% {
+                transform: translateX(-50%) scaleX(1.5);
+            }
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-bottom: 120px;
+            perspective: 2000px;
+        }
+
+        .feature-card {
+            background: rgba(30, 35, 55, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 40px 35px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.8s ease backwards;
+            transform-style: preserve-3d;
+        }
+
+        .feature-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .feature-card:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .feature-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .feature-card:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .feature-card:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .feature-card:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        .feature-card:nth-child(7) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(50px) rotateX(20deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 2px;
+            background: linear-gradient(135deg, #4A4AFF, #FF4AFF);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) rotateX(5deg) scale(1.02);
+            border-color: transparent;
+            box-shadow: 0 30px 50px rgba(74, 74, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: #9B9BFF;
+            margin-bottom: 28px;
+            transition: all 0.5s;
+            animation: iconFloat 3s ease infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotateY(180deg);
+            color: #FF4AFF;
+        }
+
+        .feature-card h3 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #fff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            line-height: 1.7;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Floating elements untuk background */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .float-element {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(75, 0, 255, 0.1), transparent 70%);
+            filter: blur(50px);
+            animation: float 20s ease infinite;
+        }
+
+        .float-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .float-element:nth-child(2) {
+            bottom: 10%;
+            right: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle at 70% 70%, rgba(255, 0, 255, 0.1), transparent 70%);
+            animation-delay: -5s;
+        }
+
+        .float-element:nth-child(3) {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 200, 255, 0.05), transparent 70%);
+            animation: pulse 10s ease infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(5%, 5%) rotate(5deg);
+            }
+
+            50% {
+                transform: translate(-5%, 10%) rotate(-5deg);
+            }
+
+            75% {
+                transform: translate(10%, -5%) rotate(3deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.5;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 50px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1.5s ease 1s both;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4A4AFF, #FF4AFF, transparent);
+            animation: scanline 3s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Modal untuk video fullscreen */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFade 0.3s ease;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal video {
+            width: 100%;
+            display: block;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .features-title {
+                font-size: 36px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .stats-grid {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 40px;
+            }
+
+            .character {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <div class="float-element"></div>
+        <div class="float-element"></div>
+        <div class="float-element"></div>
+    </div>
+
+    <!-- Canvas untuk Partikel -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="gradient-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Modal untuk video fullscreen -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <video id="modalVideo" controls autoplay loop>
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                    type="video/mp4">
+            </video>
+            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="image2video.html">Image to Video</a>
+                <a href="text2video.html">Text to Video</a>
+                <a href="video2video.html">Video to Video</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section dengan Video Kartun -->
+        <section class="hero">
+            <!-- Floating Cartoon Characters -->
+            <div class="floating-characters">
+                <div class="character"><i class="fas fa-robot"></i></div>
+                <div class="character"><i class="fas fa-rocket"></i></div>
+                <div class="character"><i class="fas fa-cat"></i></div>
+            </div>
+
+            <h1>Complete AI Video<br>Production Studio</h1>
+            <p>Experience the future of video creation with 7 powerful features in one unified platform. From
+                text-to-video to custom model training, all with cinematic quality.</p>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">20s</span>
+                    <span class="stat-label">DURATION</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">4K</span>
+                    <span class="stat-label">RESOLUTION</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50</span>
+                    <span class="stat-label">FPS</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">FEATURES</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">18x</span>
+                    <span class="stat-label">FASTER*</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Production Workflow Section -->
+        <section class="workflow-section">
+            <div class="workflow-header">
+                <h2>Production Workflow</h2>
+                <p style="color: rgba(255,255,255,0.5);">From raw idea to cinematic masterpiece in three simple steps.
+                </p>
+            </div>
+            <div class="workflow-grid">
+                <!-- Step 1 -->
+                <div class="workflow-card">
+                    <div class="step-num">01</div>
+                    <div class="wf-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="workflow_step1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="wf-content">
+                        <h3><i class="fas fa-magic"></i> Creative Input</h3>
+                        <p>Define your vision with Text2Video prompts or guide motion using Pose Control. Set the
+                            foundation for your AI generation.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="workflow-card">
+                    <div class="step-num">02</div>
+                    <div class="wf-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="workflow_step2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="wf-content">
+                        <h3><i class="fas fa-microchip"></i> AI Processing</h3>
+                        <p>Apply LoRA styles and Camera Control. Our AI engine processes your request with cinematic
+                            lighting and multi-axis movement.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="workflow-card">
+                    <div class="step-num">03</div>
+                    <div class="wf-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="workflow_step3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="wf-content">
+                        <h3><i class="fas fa-film"></i> Final Mastering</h3>
+                        <p>Use Retake & Extend to perfect every frame. Export your cinematic video in 4K resolution at
+                            50 FPS for any production.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spotlight Feature: Text to Video -->
+        <section class="feature-hero spotlight-featured">
+            <div class="spotlight-bg-glow"></div>
+            <div class="hero-text">
+                <div class="featured-badge">
+                    <span class="pulse-dot"></span>
+                    FEATURED TOOL
+                </div>
+                <h2 class="spotlight-title">
+                    Text to Video
+                </h2>
+                <p>
+                    The core of VAX Studio. Experience next-generation video synthesis with our proprietary diffusion
+                    pipeline, meticulously optimized for peak performance on RTX 4GB hardware.
+                </p>
+                <div class="hero-actions" style="display: flex; align-items: center; gap: 24px; margin-top: 32px;">
+                    <a href="text2video.html" class="btn-api"
+                        style="padding: 14px 32px; font-size: 15px; text-decoration: none;">
+                        <i class="fas fa-play"></i> Launch Tool
+                    </a>
+                    <span class="tool-status"
+                        style="font-size: 13px; color: #34d399; display: flex; align-items: center; gap: 8px; opacity: 0.8;">
+                        <i class="fas fa-check-circle"></i> Optimized for 4GB VRAM
+                    </span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-video-wrapper" style="box-shadow: 0 40px 80px rgba(0,0,0,0.6); position: relative;">
+                    <video autoplay loop muted playsinline>
+                        <source src="https://videos.ltx.io/LTX-2/SEO-pages/master-page/video-result.webm"
+                            type="video/webm">
+                    </video>
+                    <div
+                        style="position: absolute; inset: 0; box-shadow: inset 0 0 100px rgba(0,0,0,0.4); pointer-events: none;">
+                    </div>
+                </div>
+                <div class="floating-prompt-card">
+                    <span class="prompt-badge">AI PROMPT</span>
+                    <div class="prompt-content">
+                        "Woman in a fluffy pink coat standing in a field of pink and yellow flowers, cinematic lighting"
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <h2 class="features-title">All Features</h2>
+        <div class="features-grid">
+            <a href="studio.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-diagram-project"></i></div>
+                <h3>Studio Flow</h3>
+                <p>Node-based creative workflow. Interconnect multiple images, video references, and text prompts for
+                    ultimate control</p>
+            </a>
+            <a href="text2video.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-pen-fancy"></i></div>
+                <h3>Text to Video</h3>
+                <p>Advanced prompt engineering with style control, duration up to 20s, 4K resolution and cinematic
+                    camera movements</p>
+            </a>
+            <a href="audio2video.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+                <h3>Audio to Video</h3>
+                <p>Synchronized generation from voice, music, and sound effects. Perfect for podcasts, music videos, and
+                    avatars</p>
+            </a>
+            <a href="camera.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                <h3>Camera Control</h3>
+                <p>Precise motion paths: pan, tilt, orbit, dolly zoom, and dynamic AI-guided camera movements</p>
+            </a>
+            <a href="pose.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-child"></i></div>
+                <h3>Pose Control</h3>
+                <p>OpenPose driven motion for character animation with precision skeletal control and real-time
+                    adjustments</p>
+            </a>
+            <a href="depth.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>Depth Aware</h3>
+                <p>3D spatial understanding and depth map generation for realistic scene composition and foreground
+                    separation</p>
+            </a>
+            <a href="lora.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                <h3>LoRA Training</h3>
+                <p>Custom styles and characters with your own training data. Fine-tune models for your unique creative
+                    vision</p>
+            </a>
+            <a href="edit.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-cut"></i></div>
+                <h3>Retake & Extend</h3>
+                <p>Edit specific elements or extend scenes without starting over. Non-destructive video editing powered
+                    by AI</p>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 VAX Studio. Production-grade AI video generation. *Compared to WAN 2.2 14B on H100</p>
+        </footer>
+    </div>
+
+    <script>
+        // Particle Animation System
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+
+        function initParticles() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            particles = [];
+            const particleCount = Math.floor(width * height / 8000);
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    size: Math.random() * 2 + 1,
+                    color: `rgba(${100 + Math.random() * 155}, ${100 + Math.random() * 155}, 255, ${Math.random() * 0.3 + 0.1})`
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let particle of particles) {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.fill();
+
+                // Update position
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+
+                // Wrap around edges
+                if (particle.x < 0) particle.x = width;
+                if (particle.x > width) particle.x = 0;
+                if (particle.y < 0) particle.y = height;
+                if (particle.y > height) particle.y = 0;
+            }
+
+            // Draw connections between nearby particles
+            ctx.strokeStyle = 'rgba(100, 100, 255, 0.1)';
+            ctx.lineWidth = 0.5;
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(100, 100, 255, ${0.1 * (1 - distance / 100)})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(drawParticles);
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            initParticles();
+        });
+
+        // Initialize and start animation
+        initParticles();
+        drawParticles();
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('videoModal').classList.add('active');
+            document.getElementById('modalVideo').play();
+        }
+
+        function closeModal() {
+            document.getElementById('videoModal').classList.remove('active');
+            document.getElementById('modalVideo').pause();
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Intersection Observer untuk animasi scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'cardAppear 0.8s ease forwards';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Efek parallax mouse
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+
+            document.querySelectorAll('.feature-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = (rect.left + rect.width / 2) / window.innerWidth - 0.5;
+                const cardY = (rect.top + rect.height / 2) / window.innerHeight - 0.5;
+
+                const rotateX = (mouseY - cardY) * 5;
+                const rotateY = (mouseX - cardX) * 5;
+
+                if (card.matches(':hover')) {
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+                }
+            });
+        });
+
+        // Smooth scroll untuk anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Loading animation
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // Dynamic counter animation
+        const stats = document.querySelectorAll('.stat-number');
+        stats.forEach(stat => {
+            const target = stat.innerText.replace(/[^0-9]/g, '');
+            if (target) {
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.innerText = stat.innerText.includes('x') ? target + 'x' : target;
+                        clearInterval(timer);
+                    } else {
+                        stat.innerText = stat.innerText.includes('x') ? Math.floor(current) + 'x' : Math.floor(current);
+                    }
+                }, 20);
+            }
+        });
+
+        // Random character movement
+        const characters = document.querySelectorAll('.character');
+        characters.forEach(char => {
+            char.addEventListener('mouseover', function () {
+                this.style.transform = 'scale(1.2)';
+                this.style.transition = 'transform 0.3s';
+            });
+            char.addEventListener('mouseout', function () {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+
+</html>

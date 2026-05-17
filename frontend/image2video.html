@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Video - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .upload-area {
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(0,0,0,0.2);
+        }
+        .upload-area:hover {
+            border-color: #4A4AFF;
+            background: rgba(74, 74, 255, 0.05);
+        }
+        #image-preview-container {
+            position: relative;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #image-preview {
+            width: 100%;
+            display: block;
+            max-height: 400px;
+            object-fit: contain;
+            background: #000;
+        }
+        .remove-image-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .remove-image-btn:hover {
+            background: #ff4a4a;
+            border-color: #ff4a4a;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="image2video.html">Image to Video</a>
+                <a href="text2video.html">Text to Video</a>
+                <a href="video2video.html">Video to Video</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Image to Video</h1>
+                    <p>Breathe life into your static images. Upload an image, add a prompt, and watch it transform into a cinematic video sequence using LTX-Video technology.</p>
+                    <button class="btn-explore" onclick="document.getElementById('image-upload-section').scrollIntoView({behavior:'smooth'})">Start Creating</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <!-- Example video showcasing image to video capabilities -->
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.io/LTX-2/LTX-2-3-release/model-page/ltx2-3-hero-fin-opt1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">IMAGE + TEXT</span>
+                        <div class="prompt-content">
+                            <i class="fas fa-image" style="color: #4A4AFF; margin-right: 8px;"></i>
+                            Animating elements, subtle camera pan, cinematic motion...
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GPU Info Bar -->
+            <div id="gpu-bar" class="gpu-bar" style="display:none">
+                <div class="gpu-item">
+                    <span class="gpu-label">GPU</span>
+                    <span id="gpu-name" class="gpu-value">—</span>
+                </div>
+                <div class="gpu-divider"></div>
+                <div class="gpu-item">
+                    <span class="gpu-label">VRAM Bebas</span>
+                    <span id="gpu-vram" class="gpu-value">— GB</span>
+                </div>
+                <div class="gpu-divider"></div>
+                <div class="gpu-item">
+                    <span class="gpu-label">Model</span>
+                    <span id="model-status" class="gpu-value">Belum di-load</span>
+                </div>
+            </div>
+
+            <section class="card" id="image-upload-section">
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-image"></i> INITIAL IMAGE (REQUIRED)
+                    </label>
+                    <div class="upload-area" id="upload-drop-zone" onclick="document.getElementById('image-upload').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #4A4AFF; margin-bottom: 15px;"></i>
+                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Click or drag image here to upload</p>
+                        <p style="margin-top: 5px; font-size: 12px; color: rgba(255,255,255,0.4);">Supported formats: PNG, JPG, WEBP (Max 5MB)</p>
+                        <input type="file" id="image-upload" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="handleImageUpload(event)">
+                    </div>
+                    <div id="image-preview-container">
+                        <img id="image-preview" src="" alt="Preview">
+                        <button class="remove-image-btn" onclick="removeImage()" title="Remove Image"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="prompt">
+                        <i class="fas fa-pen-fancy"></i> MOTION PROMPT
+                    </label>
+                    <textarea id="prompt" rows="3" class="form-textarea" placeholder="Describe the desired motion... e.g., 'Camera slowly zooms in, leaves rustling in the wind, dramatic lighting'"></textarea>
+                    <div class="char-counter">
+                        <span id="char-count">0</span> / 500 characters
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="negative-prompt">Negative Prompt</label>
+                    <input type="text" id="negative-prompt" class="form-input" value="worst quality, inconsistent, blurry, noisy, distorted, artifact, low resolution">
+                </div>
+
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="resolution">Resolution</label>
+                        <select id="resolution" class="form-select">
+                            <option value="320x224">320×224 — Fast</option>
+                            <option value="480x256" selected>480×256 — Standard (4GB)</option>
+                            <option value="256x256">256×256 — Square</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="seed">Seed</label>
+                        <input type="number" id="seed" class="form-input" value="-1">
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            Frames
+                            <span class="range-value" id="frames-val">25</span>
+                        </label>
+                        <input type="range" id="num-frames" class="form-range" min="8" max="150" value="25" step="1">
+                        <div class="range-hint">Duration ≈ <strong id="duration-est">1.0</strong>s</div>
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            Steps
+                            <span class="range-value" id="steps-val">40</span>
+                        </label>
+                        <input type="range" id="steps" class="form-range" min="4" max="100" value="40" step="1">
+                        <div class="range-hint">Higher = Better but slower</div>
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            CFG Scale
+                            <span class="range-value" id="cfg-val">3.5</span>
+                        </label>
+                        <input type="range" id="cfg" class="form-range" min="1.0" max="10.0" value="3.5" step="0.1">
+                        <div class="range-hint">Normal: 3.0 - 4.5</div>
+                    </div>
+                </div>
+
+                <div class="vram-warning">
+                    <div class="warning-icon">⚡</div>
+                    <div class="warning-content">
+                        <strong>RTX 3050 4GB Optimized</strong>
+                        <p>CPU offloading is active. Image-to-Video generation typically takes 3-12 minutes depending on frame count.</p>
+                    </div>
+                </div>
+
+                <button id="generate-btn" class="btn-generate" onclick="generateImageToVideo()">
+                    <i class="fas fa-play" style="margin-right: 8px;"></i> Generate Video
+                </button>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress-section" class="card progress-card" style="display:none">
+                <div class="progress-header">
+                    <div class="spinner"></div>
+                    <div>
+                        <h2 class="card-title">Generating Video...</h2>
+                        <p id="progress-text" class="card-subtitle">Initializing Image-to-Video pipeline...</p>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Image to Video Engine</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // UI logic for Image upload handling
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (max 5MB)
+                if(file.size > 5 * 1024 * 1024) {
+                    alert('Ukuran file terlalu besar! Maksimal 5MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('image-preview').src = e.target.result;
+                    document.getElementById('image-preview-container').style.display = 'block';
+                    document.getElementById('upload-drop-zone').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('image-upload').value = '';
+            document.getElementById('image-preview-container').style.display = 'none';
+            document.getElementById('image-preview').src = '';
+            document.getElementById('upload-drop-zone').style.display = 'block';
+        }
+
+        function generateImageToVideo() {
+            const img = document.getElementById('image-preview').src;
+            if (!img || img === window.location.href) {
+                alert("Harap unggah gambar awal (Initial Image) terlebih dahulu!");
+                return;
+            }
+            
+            // This is a mockup for now until backend is fully hooked up
+            alert("✅ Input Valid!\n\nMemulai proses Image-to-Video... (Fitur ini sedang dalam tahap pengembangan untuk dihubungkan ke LTXImageToVideoPipeline di backend).");
+            
+            // Demo progress visualization
+            document.getElementById('generate-btn').disabled = true;
+            document.getElementById('progress-section').style.display = 'block';
+            let prog = 0;
+            const progBar = document.getElementById('progress-fill');
+            const interval = setInterval(() => {
+                prog += Math.random() * 5;
+                if(prog > 100) prog = 100;
+                progBar.style.width = prog + '%';
+                
+                if(prog >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('progress-section').style.display = 'none';
+                    document.getElementById('generate-btn').disabled = false;
+                    progBar.style.width = '0%';
+                }
+            }, 300);
+        }
+        
+        // Character counter for prompt
+        const promptInput = document.getElementById('prompt');
+        if(promptInput) {
+            promptInput.addEventListener('input', function() {
+                document.getElementById('char-count').innerText = this.value.length;
+            });
+        }
+        
+        // Sync range sliders with display values
+        const sliders = ['num-frames', 'steps'];
+        sliders.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.addEventListener('input', (e) => {
+                    const valEl = document.getElementById(id.replace('num-', '') + '-val');
+                    if(valEl) valEl.innerText = e.target.value;
+                    
+                    if(id === 'num-frames') {
+                        const durationEl = document.getElementById('duration-est');
+                        if(durationEl) durationEl.innerText = (e.target.value / 25).toFixed(1);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

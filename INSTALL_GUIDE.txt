@@ -1,0 +1,74 @@
+# install.bat - Panduan Instalasi Manual
+# Jalankan perintah berikut satu per satu di terminal
+
+# ============================================================
+# LANGKAH 1: Buat dan aktifkan virtual environment
+# ============================================================
+
+python -m venv venv
+venv\Scripts\activate
+
+# ============================================================  
+# LANGKAH 2: Install PyTorch dengan CUDA 12.1
+# PENTING: Jangan skip ini! Pakai CUDA version yang sesuai.
+# ============================================================
+
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# Verifikasi GPU:
+python test_gpu.py
+
+# ============================================================
+# LANGKAH 3: Install dependencies lainnya
+# ============================================================
+
+pip install -r requirements.txt
+
+# ============================================================
+# LANGKAH 4: (Opsional) Login HuggingFace untuk download model
+# ============================================================
+
+# huggingface-cli login
+# Masukkan token dari: https://huggingface.co/settings/tokens
+
+# ============================================================
+# LANGKAH 5: Jalankan server
+# ============================================================
+
+# Cara 1: Via script batch (mudah)
+# Double-click start_server.bat
+
+# Cara 2: Manual
+# set PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128
+# cd backend
+# python main.py
+
+# Server berjalan di:
+#   http://localhost:8000          <- API
+#   http://localhost:8000/docs     <- Swagger UI
+#   Buka frontend/index.html       <- Website
+
+# ============================================================
+# TROUBLESHOOTING bitsandbytes di Windows
+# ============================================================
+
+# Jika pip install bitsandbytes gagal di Windows:
+# pip uninstall bitsandbytes -y
+# pip install bitsandbytes --prefer-binary
+
+# Atau download manual dari:
+# https://github.com/jllllll/bitsandbytes-windows-webui/releases
+
+# ============================================================
+# CATATAN VRAM 4GB (RTX 3050)
+# ============================================================
+
+# Resolusi yang aman:
+#   320x240 dengan 16-25 frame (~2-5 menit)
+#   480x272 dengan 25 frame (~5-10 menit)
+
+# Jika CUDA Out of Memory:
+#   - Kurangi resolusi ke 320x240
+#   - Kurangi num_frames ke 8-16  
+#   - Tutup aplikasi lain (browser berat, game, dll)
+#   - Restart server dan coba lagi

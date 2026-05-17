@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Video - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="image2video.html">Image to Video</a>
+                <a href="text2video.html">Text to Video</a>
+                <a href="video2video.html">Video to Video</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Text to Video</h1>
+                    <p>Generate cinematic video directly from text prompts. Control motion, composition, and visual flow using natural language.</p>
+                    <button class="btn-explore" onclick="document.getElementById('prompt').scrollIntoView({behavior:'smooth'})">Explore</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.io/LTX-2/SEO-pages/master-page/01-text-to-video-model-3x2.webm" type="video/webm">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">TEXT INPUT</span>
+                        <div class="prompt-content">
+                            Woman in a fluffy pink coat standing in a field of pink and yellow flowers, soft overcast sky, calm confident pose
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GPU Info Bar -->
+            <div id="gpu-bar" class="gpu-bar" style="display:none">
+                <div class="gpu-item">
+                    <span class="gpu-label">GPU</span>
+                    <span id="gpu-name" class="gpu-value">—</span>
+                </div>
+                <div class="gpu-divider"></div>
+                <div class="gpu-item">
+                    <span class="gpu-label">VRAM Bebas</span>
+                    <span id="gpu-vram" class="gpu-value">— GB</span>
+                </div>
+                <div class="gpu-divider"></div>
+                <div class="gpu-item">
+                    <span class="gpu-label">Model</span>
+                    <span id="model-status" class="gpu-value">Belum di-load</span>
+                </div>
+                <div class="gpu-divider"></div>
+                <div class="gpu-item">
+                    <span class="gpu-label">Antrian</span>
+                    <span id="queue-size" class="gpu-value">0</span>
+                </div>
+            </div>
+
+            <div id="status-badge" class="status-badge status-checking" style="margin-bottom: 20px;">
+                <span class="status-icon">⏳</span>
+                <span id="status-text">Mengecek koneksi server...</span>
+            </div>
+
+            <section class="card">
+                <div class="form-group">
+                    <label class="form-label" for="prompt">
+                        <i class="fas fa-pen-fancy"></i> PROMPT
+                    </label>
+                    <textarea id="prompt" rows="3" class="form-textarea" placeholder="Describe your video in detail... Cinematic, 4K, style, movement, lighting..."></textarea>
+                    <div class="char-counter">
+                        <span id="char-count">0</span> / 500 characters
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="negative-prompt">Negative Prompt</label>
+                    <input type="text" id="negative-prompt" class="form-input" value="worst quality, inconsistent, blurry, noisy, distorted, artifact, low resolution">
+                </div>
+
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="resolution">Resolution</label>
+                        <select id="resolution" class="form-select">
+                            <option value="320x224">320×224 — Fast</option>
+                            <option value="480x256" selected>480×256 — Standard (4GB)</option>
+                            <option value="256x256">256×256 — Square</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="seed">Seed</label>
+                        <input type="number" id="seed" class="form-input" value="-1">
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            Frames
+                            <span class="range-value" id="frames-val">25</span>
+                        </label>
+                        <input type="range" id="num-frames" class="form-range" min="8" max="1500" value="25" step="1">
+                        <div class="range-hint">Duration ≈ <strong id="duration-est">1.0</strong>s</div>
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            Steps
+                            <span class="range-value" id="steps-val">40</span>
+                        </label>
+                        <input type="range" id="steps" class="form-range" min="4" max="100" value="40" step="1">
+                        <div class="range-hint">Higher = Better but slower</div>
+                    </div>
+                    <div class="form-group range-group">
+                        <label class="form-label">
+                            CFG Scale
+                            <span class="range-value" id="cfg-val">3.5</span>
+                        </label>
+                        <input type="range" id="cfg" class="form-range" min="1.0" max="10.0" value="3.5" step="0.1">
+                        <div class="range-hint">Normal: 3.0 - 4.5</div>
+                    </div>
+                </div>
+
+                <div class="vram-warning">
+                    <div class="warning-icon">⚡</div>
+                    <div class="warning-content">
+                        <strong>RTX 3050 4GB Optimized</strong>
+                        <p>CPU offloading active. Generation takes 2-10 minutes.</p>
+                    </div>
+                </div>
+
+                <button id="generate-btn" class="btn-generate" onclick="generateVideo()">
+                    <i class="fas fa-play" style="margin-right: 8px;"></i> Generate
+                </button>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress-section" class="card progress-card" style="display:none">
+                <div class="progress-header">
+                    <div class="spinner"></div>
+                    <div>
+                        <h2 class="card-title">Generating...</h2>
+                        <p id="progress-text" class="card-subtitle">Requesting server...</p>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="progress-meta">
+                    Job ID: <code id="job-id-display" class="code-tag"></code>
+                    <span id="elapsed-time" class="elapsed">0s elapsed</span>
+                </div>
+            </section>
+
+            <!-- Result Section -->
+            <section id="result-section" class="card result-card" style="display:none">
+                <h2 class="card-title">Video Ready!</h2>
+                <div class="video-wrapper">
+                    <video id="result-video" class="result-video" controls autoplay loop muted></video>
+                </div>
+                <div class="result-meta">
+                    <div class="meta-item"><span class="meta-label">Seed</span><code id="result-seed" class="code-tag"></code></div>
+                    <div class="meta-item"><span class="meta-label">Duration</span><span id="result-duration" class="meta-value"></span>s</div>
+                </div>
+                <div class="result-actions">
+                    <a id="download-btn" class="btn-download" download><i class="fas fa-download"></i> Download</a>
+                    <button class="btn-secondary" onclick="resetForm()"><i class="fas fa-redo"></i> Create Again</button>
+                </div>
+            </section>
+
+            <section id="error-section" class="card error-card" style="display:none">
+                <h2 class="card-title" style="color: #f87171">Generation Failed</h2>
+                <p id="error-msg" class="error-text"></p>
+                <button class="btn-secondary" onclick="resetForm()">Try Again</button>
+            </section>
+
+            <!-- Gallery Section -->
+            <section class="card">
+                <div class="gallery-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="card-title">Gallery</h2>
+                    <button class="btn-refresh" onclick="loadGallery()" id="refresh-btn"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+                <div id="gallery" class="gallery"></div>
+            </section>
+
+            <section class="card">
+                <h2 class="card-title">Model Controls</h2>
+                <div style="display: flex; gap: 12px; margin-top: 15px;">
+                    <button class="btn-refresh" onclick="loadModel()">Load Model</button>
+                    <button class="btn-refresh" style="color: #f87171; border-color: rgba(248, 113, 113, 0.3);" onclick="unloadModel()">Unload Model</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Text to Video Feature</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

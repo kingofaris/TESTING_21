@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio to Video - VAX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">VAX STUDIO</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="studio.html">Studio Flow</a>
+                <a href="text2video.html">Text2Video</a>
+                <a href="audio2video.html">Audio2Video</a>
+                <a href="camera.html">Camera</a>
+                <a href="pose.html">Pose</a>
+                <a href="depth.html">Depth</a>
+                <a href="lora.html">LoRA</a>
+                <a href="edit.html">Edit</a>
+                <button class="btn-api" onclick="alert('🚀 API Access: Ready for integration!')">
+                    <i class="fas fa-key"></i> API Access
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Feature Hero Section -->
+            <section class="feature-hero">
+                <div class="hero-text">
+                    <h1>Audio to Video</h1>
+                    <p>Synchronize generation from voice, music, and sound effects. Perfect for creating expressive AI avatars, music videos, and cinematic narrations.</p>
+                    <button class="btn-explore">Get Started</button>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="https://videos.ltx.io/LTX-2/SEO-pages/master-page/00-ltx-models-hero-DK.webm" type="video/webm">
+                        </video>
+                    </div>
+                    <div class="floating-prompt-card">
+                        <span class="prompt-badge">AUDIO INPUT</span>
+                        <div class="prompt-content">
+                            <i class="fas fa-waveform-lines" style="color: #A0A0FF; margin-right: 8px;"></i> cinematic_score_epic.wav
+                            <p style="margin-top: 5px; font-size: 11px; color: rgba(255,255,255,0.5);">Syncing visual flow to rhythmic transients...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-headphones"></i> UPLOAD AUDIO</label>
+                    <div style="background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer;">
+                        <i class="fas fa-music" style="font-size: 40px; color: var(--purple-400); margin-bottom: 15px;"></i>
+                        <p>Click to upload or drag and drop MP3, WAV</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Visual Style Prompt</label>
+                    <textarea class="form-textarea" placeholder="Describe the visuals triggered by audio..."></textarea>
+                </div>
+
+                <button class="btn-generate">
+                    <i class="fas fa-magic" style="margin-right: 8px;"></i> Generate Visuals
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 VAX Studio - Audio to Video Feature</p>
+        </footer>
+    </div>
+</body>
+</html>
